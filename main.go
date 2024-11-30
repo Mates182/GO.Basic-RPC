@@ -1,15 +1,15 @@
 package main
 
-import "fmt"
-
 type Item struct {
 	title string
 	body  string
 }
 
+type API int
+
 var database []Item
 
-func GetByName(title string) Item {
+func (a *API) GetByName(title string, reply *Item) error {
 	var getItem Item
 	for _, val := range database {
 		if val.title == title {
@@ -17,26 +17,29 @@ func GetByName(title string) Item {
 		}
 	}
 
-	return getItem
+	*reply = getItem
+	return nil
 }
 
-func AddItem(item Item) Item {
+func (a *API) AddItem(item Item, reply *Item) error {
 	database = append(database, item)
-	return item
+	*reply = item
+	return nil
 }
 
-func EditItem(title string, edit Item) Item {
+func (a *API) EditItem(edit Item, reply *Item) error {
 	var changed Item
 	for idx, val := range database {
-		if val.title == title {
-			database[idx] = edit
-			changed = edit
+		if val.title == edit.title {
+			database[idx] = Item{edit.title, edit.body}
+			changed = database[idx]
 		}
 	}
-	return changed
+	*reply = changed
+	return nil
 }
 
-func DeleteItem(item Item) Item {
+func (a *API) DeleteItem(item Item, reply *Item) error {
 	var del Item
 	for idx, val := range database {
 		if val.title == item.title && val.body == item.body {
@@ -45,28 +48,31 @@ func DeleteItem(item Item) Item {
 			break
 		}
 	}
-	return del
+	*reply = del
+	return nil
 }
 
 func main() {
-	fmt.Println("initial database: ", database)
-	a := Item{"first", "a test item"}
-	b := Item{"second", "a second item"}
-	c := Item{"third", "a third item"}
 
-	AddItem(a)
-	AddItem(b)
-	AddItem(c)
-	fmt.Println("second database: ", database)
+	/*
+		fmt.Println("initial database: ", database)
+		a := Item{"first", "a test item"}
+		b := Item{"second", "a second item"}
+		c := Item{"third", "a third item"}
 
-	DeleteItem(b)
-	fmt.Println("third database: ", database)
+		AddItem(a)
+		AddItem(b)
+		AddItem(c)
+		fmt.Println("second database: ", database)
 
-	EditItem("third", Item{"fourth", "a new item"})
-	fmt.Println("fourth database: ", database)
+		DeleteItem(b)
+		fmt.Println("third database: ", database)
 
-	x := GetByName("fourth")
-	y := GetByName("first")
-	fmt.Println(x, y)
+		EditItem("third", Item{"fourth", "a new item"})
+		fmt.Println("fourth database: ", database)
 
+		x := GetByName("fourth")
+		y := GetByName("first")
+		fmt.Println(x, y)
+	*/
 }
