@@ -1,5 +1,12 @@
 package main
 
+import (
+	"log"
+	"net"
+	"net/http"
+	"net/rpc"
+)
+
 type Item struct {
 	title string
 	body  string
@@ -53,6 +60,26 @@ func (a *API) DeleteItem(item Item, reply *Item) error {
 }
 
 func main() {
+	var api = new(API)
+	err := rpc.Register(api)
+
+	if err != nil {
+		log.Fatal("error registering API: ", err)
+	}
+
+	rpc.HandleHTTP()
+
+	listener, err := net.Listen("tcp", ":4040")
+
+	if err != nil {
+		log.Fatal("Listener error: ", err)
+	}
+
+	log.Printf("serving rpc on port %d", 4040)
+	err = http.Serve(listener, nil)
+	if err != nil {
+		log.Fatal("error serving: ", err)
+	}
 
 	/*
 		fmt.Println("initial database: ", database)
