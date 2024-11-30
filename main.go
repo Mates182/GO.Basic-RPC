@@ -28,7 +28,7 @@ func AddItem(item Item) Item {
 func EditItem(title string, edit Item) Item {
 	var changed Item
 	for idx, val := range database {
-		if val.title == edit.title {
+		if val.title == title {
 			database[idx] = edit
 			changed = edit
 		}
@@ -66,7 +66,7 @@ func main() {
 	fmt.Println("fourth database: ", database)
 
 	x := GetByName("fourth")
-	y := GetByName("fourth")
+	y := GetByName("first")
 	fmt.Println(x, y)
 
 }
